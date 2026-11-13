@@ -224,6 +224,13 @@ export default withNextIntl({
   },
   basePath,
   output: isVercel ? undefined : 'standalone',
+  // Bundle the GeoLite2 database into the serverless functions that resolve an
+  // IP to a location, so `maxmind.open('geo/GeoLite2-City.mmdb')` works on
+  // Vercel (where the file is otherwise not traced into the function bundle).
+  outputFileTracingIncludes: {
+    '/api/send': ['./geo/**'],
+    '/api/record': ['./geo/**'],
+  },
   typescript: {
     ignoreBuildErrors: true,
   },
